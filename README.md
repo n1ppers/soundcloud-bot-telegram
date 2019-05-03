@@ -1,6 +1,6 @@
 # Simple SoundCloud bot for Telegram messanger
 
-### Telegram link: t.me/sc_music_bot
+### Telegram link: https://t.me/sc_music_bot
 
 ### Requirements:
 - Python 3
