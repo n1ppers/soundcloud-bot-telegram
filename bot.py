@@ -12,7 +12,8 @@ api = SoundcloudAPI()
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-	bot.send_message(message.from_user.id, 
+    print(message.from_user.username, ": ", message.text)
+    bot.send_message(message.from_user.id, 
         '''
 Commands: \n/github - Get a link to repository with my source code on GitHub \n/support - Contact my owner
 /track - Download single track by link \n/playlist - Download all tracks from playlist by link
