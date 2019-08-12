@@ -38,13 +38,17 @@ if __name__ == "__main__":
     #    #f.write("proxy_ip=127.0.0.1 \n")
     #    #f.write("\nproxy_port=80")
     #    f.close()
-    if not os.path.exists("token.txt"):
+    if not os.path.isdir("cache"):
+        os.mkdir("cache")
+        print("cache directory created.")
+    
+    if not os.path.isfile("token.txt"):
         f = open("token.txt", "w+")
         f.write("ur token here")
         f.close()
         print("token.txt created.")
         sys.exit()
-
+    
     print(":^)")
 
     #print(getValue("token"))
@@ -116,29 +120,40 @@ def command_playlist(message):
 
 def isLinkValid(link):
     if link.startswith("https://soundcloud.com/"):
+        print("Link is valid")
         return True
     if link.startswith("http://soundcloud.com/"):
+        print("Link is valid")
         return True
     if link.startswith("http://m.soundcloud.com/"):
+        print("Link is valid")
         return True
     if link.startswith("https://m.soundcloud.com/"):
+        print("Link is valid")
         return True
     
+    print("Link is not valid")
     return False
 
 def getURL(msg):
     url = msg
     if not msg.startswith("https://soundcloud.com/"):
+        print("Converting link...")
         if msg.startswith("http://soundcloud.com/"):
             url = msg.replace("http://soundcloud.com/", "https://soundcloud.com/")
+            print("Converted link: %s" % (url))
         elif msg.startswith("http://m.soundcloud.com/"):
             url = msg.replace("http://m.soundcloud.com/", "https://soundcloud.com/")
+            print("Converted link: %s" % (url))
         elif msg.startswith("https://m.soundcloud.com/"):
             url = msg.replace("https://m.soundcloud.com/", "https://soundcloud.com/")
+            print("Converted link: %s" % (url))
         else:
             url = msg
+            print("Converted link: %s" % (url))
     
     if "?in=" in url:
+        print("Converted link: %s" % (url.split("?in=")[0]))
         return url.split("?in=")[0]
 
     return url
