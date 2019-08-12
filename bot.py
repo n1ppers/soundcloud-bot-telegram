@@ -169,11 +169,11 @@ def download_track(message):
     with open(filename, 'wb+') as fp:
         try:
             track.write_mp3_to(fp)
-            audio = open(filename, 'wb+')
+            audio = open(filename, 'rb')
             bot.send_audio(message.from_user.id, audio)
             os.remove(filename)
         except (FileNotFoundError):
-            bot.send_message(message.from_user.id, "An error has occured while downloading this track.")
+            bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
             return
 
 def download_playlist(message):
@@ -188,7 +188,7 @@ def download_playlist(message):
         with open(filename, 'wb+') as fp:
             try:
                 track.write_mp3_to(fp)
-                audio = open(filename, 'wb+')
+                audio = open(filename, 'rb')
                 bot.send_audio(message.from_user.id, audio)
                 #os.remove(filename)
             except (FileNotFoundError):              
