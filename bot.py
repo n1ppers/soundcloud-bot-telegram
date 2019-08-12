@@ -187,19 +187,18 @@ def download_playlist(message):
         filename = f'cache/{track.artist} - {track.title}.mp3'
         with open(filename, 'wb+') as fp:
             try:
-                #goddamn
+                track.write_mp3_to(fp)
+                audio = open(filename, 'wb+')
+                bot.send_audio(message.from_user.id, audio)
+                os.remove(filename)
+            except:
                 try:
-                    track.write_mp3_to(fp)
-                    audio = open(filename, 'wb+')
-                    bot.send_audio(message.from_user.id, audio)
+                    bot.send_message(message.from_user.id, f"An error has occured while downloading {filename}, deleting .mp3")
                     os.remove(filename)
                 except:
-                    try:
-                        os.remove(filename)
-                    except:
-                        continue
-            except (FileNotFoundError):
-                bot.send_message(message.from_user.id, "An error has occured while downloading this track.")
-                return
+                    bot.send_message(message.from_user.id, f"An error has occured while downloading {filename}")
+                    continue              
+                #bot.send_message(message.from_user.id, "An error has occured while downloading this track.")
+                #return
 
 bot.polling(none_stop=True, interval=0)
