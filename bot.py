@@ -163,7 +163,8 @@ def download_track(message):
         bot.send_message(message.from_user.id, "Oops, looks like, that's not a SoundCloud link.")
         return
     
-    track = api.resolve(getURL(message.text))
+    track_url = getURL(message.text)
+    track = api.resolve(str(track_url))
     assert type(track) is Track
     name = f'./{track.artist} - {track.title}.mp3'
     filename = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
