@@ -45,6 +45,8 @@ if __name__ == "__main__":
         print("token.txt created.")
         sys.exit()
 
+    print(":^)")
+
     #print(getValue("token"))
     #print(getValue("proxy_type"))
     #print(getValue("proxy_ip"))
@@ -64,10 +66,21 @@ api = SoundcloudAPI()
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     print(message.from_user.username, ": ", message.text)
+    if message.text.startswith("/start"):
+        command_start(message)
+    elif message.text.startswith("/help"):
+        command_help(message)
+    elif message.text.startswith("/github"):
+        command_github(message)
+    elif message.text.startswith("/support"):
+        command_support(message)
+    elif message.text.startswith("/track"):
+        command_track(message)
+    elif message.text.startswith("/playlist"):
+        command_playlist(message)
 
-@bot.message_handler(commands=['start', 'help'])
-def welcome(message):
-    print(message.from_user.username, ": ", message.text)
+def command_start(message):
+    bot.send_message(message.from_user.id, "Oh, Hello there :^)")
     bot.send_message(message.from_user.id, 
         '''
 Commands: 
@@ -77,20 +90,26 @@ Commands:
 /playlist - Download all tracks from playlist by link
         ''')
 
-@bot.message_handler(commands=['github'])
+def command_help(message):
+    bot.send_message(message.from_user.id, 
+        '''
+Commands: 
+/github - Get a link to repository with my source code on GitHub 
+/support - Contact my owner
+/track - Download single track by link 
+/playlist - Download all tracks from playlist by link
+        ''')
+
 def command_github(message):
     bot.send_message(message.from_user.id, "GitHub \nhttps://github.com/n1ppers/soundcloud-bot-telegram")
 
-@bot.message_handler(commands=['support'])
 def command_support(message):
     bot.send_message(message.from_user.id, "Telegram: @n1ppers")
 
-@bot.message_handler(commands=['track'])
 def command_track(message):
     msg = bot.send_message(message.from_user.id, "Please, send me a link to track that you want to download.")
     bot.register_next_step_handler(msg, download_track)
 
-@bot.message_handler(commands=['playlist'])
 def command_playlist(message):
     msg = bot.send_message(message.from_user.id, "Please, send me a link to playlist that you want to download.")
     bot.register_next_step_handler(msg, download_playlist)
