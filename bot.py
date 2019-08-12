@@ -165,16 +165,17 @@ def download_track(message):
     
     track = api.resolve(getURL(message.text))
     assert type(track) is Track
-    filename = f'cache/{track.artist} - {track.title}.mp3'
-    with open(filename, 'wb+') as fp:
-        try:
+    name = f'cache/{track.artist} - {track.title}.mp3'
+    filename = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
+    try:
+        with open(filename, 'wb+') as fp:
             track.write_mp3_to(fp)
             audio = open(filename, 'rb')
             bot.send_audio(message.from_user.id, audio)
             os.remove(filename)
-        except (FileNotFoundError):
-            bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
-            return
+    except (FileNotFoundError):
+        bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
+        return
 
 def download_playlist(message):
     if not isLinkValid(message.text):
@@ -184,15 +185,16 @@ def download_playlist(message):
     playlist = api.resolve(getURL(message.text))
     assert type(playlist) is Playlist
     for track in playlist.tracks:
-        filename = f'cache/{track.artist} - {track.title}.mp3'
-        with open(filename, 'wb+') as fp:
-            try:
+        name = f'cache/{track.artist} - {track.title}.mp3'
+        filename = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
+        try:
+            with open(filename, 'wb+') as fp:
                 track.write_mp3_to(fp)
                 audio = open(filename, 'rb')
                 bot.send_audio(message.from_user.id, audio)
                 #os.remove(filename)
-            except (FileNotFoundError):              
-                bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
-                return
+        except (FileNotFoundError):              
+            bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
+            return
 
 bot.polling(none_stop=True, interval=0)
