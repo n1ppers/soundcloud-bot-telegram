@@ -169,7 +169,7 @@ def download_track(message):
     with open(filename, 'wb+') as fp:
         try:
             track.write_mp3_to(fp)
-            audio = open(filename, 'rb')
+            audio = open(filename, 'wb+')
             bot.send_audio(message.from_user.id, audio)
             os.remove(filename)
         except (FileNotFoundError):
@@ -181,17 +181,23 @@ def download_playlist(message):
         bot.send_message(message.from_user.id, "Oops, looks like, that's not a SoundCloud link.")
         return
     
-    playlist = api.resolve(message.text)
+    playlist = api.resolve(getURL(message.text))
     assert type(playlist) is Playlist
     for track in playlist.tracks:
-        name = f'./{track.artist} - {track.title}.mp3'
-        filename = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
-        with open(filename, 'wb+') as fp:
+        name = f'cache/{track.artist} - {track.title}.mp3'
+        with open(name, 'wb+') as fp:
             try:
-                track.write_mp3_to(fp)
-                audio = open(filename, 'rb')
-                bot.send_audio(message.from_user.id, audio)
-                os.remove(filename)
+                #goddamn
+                try:
+                    track.write_mp3_to(fp)
+                    audio = open(filename, 'wb+')
+                    bot.send_audio(message.from_user.id, audio)
+                    os.remove(filename)
+                except:
+                    try:
+                        os.remove(filename)
+                    except:
+                        continue
             except (FileNotFoundError):
                 bot.send_message(message.from_user.id, "An error has occured while downloading this track.")
                 return
