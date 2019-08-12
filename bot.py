@@ -166,7 +166,8 @@ def download_track(message):
     track = api.resolve(getURL(message.text))
     assert type(track) is Track
     name = f'{track.artist} - {track.title}.mp3'
-    filename = f'cache/{re.sub('[\|/|:|*|?|"|<|>\|]', '', name)}'
+    fixedname = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
+    filename = f'cache/{fixedname}'
     try:
         with open(filename, 'wb+') as fp:
             track.write_mp3_to(fp)
@@ -186,7 +187,8 @@ def download_playlist(message):
     assert type(playlist) is Playlist
     for track in playlist.tracks:
         name = f'{track.artist} - {track.title}.mp3'
-        filename = f'cache/{re.sub('[\|/|:|*|?|"|<|>\|]', '', name)}'
+        fixedname = re.sub('[\|/|:|*|?|"|<|>\|]', '', name)
+        filename = f'cache/{fixedname}'
         try:
             with open(filename, 'wb+') as fp:
                 track.write_mp3_to(fp)
