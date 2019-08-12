@@ -1,11 +1,52 @@
 import telebot
 import os
 import re
+import os.path
+
+import sys
 
 from sclib import SoundcloudAPI, Track, Playlist
 from telebot import types
+from telebot import apihelper
 
-TOKEN = os.environ["TOKEN"]
+def getValue(variable):
+    string = ""
+    value = ""
+    if ("=" not in variable):
+        string = str(variable + "=")
+    else:
+        string = variable
+    with open("main.cfg") as f:
+        cfg = f.readlines()
+        for i in range(len(cfg)):
+            if (cfg[i].startswith(string)):
+                value = cfg[i].replace(string, "")
+            else:
+                continue
+
+        return value
+
+if __name__ == "__main__":
+    if not os.path.exists("main.cfg"):
+        f = open("main.cfg", "w+")
+        f.write("token=urtokenhere")
+        f.write("\nproxy_type=http")
+        f.write("\nproxy_ip=127.0.0.1")
+        f.write("\nproxy_port=80")
+        f.close()
+    
+    print(getValue("token"))
+    print(getValue("proxy_type"))
+    print(getValue("proxy_ip"))
+    print(getValue("proxy_port"))
+
+TOKEN = getValue("token")
+PROXY_TYPE = getValue("proxy_type")
+PROXY_IP = getValue("proxy_ip")
+PROXY_PORT = getValue("proxy_port")
+
+if not PROXY_IP == "" and not PROXY_IP == "127.0.0.1":
+    apihelper.proxy = {PROXY_TYPE:PROXY_IP}
 
 bot = telebot.TeleBot(TOKEN)
 api = SoundcloudAPI()
@@ -30,8 +71,6 @@ def get_text_messages(message):
         command_track(message)
     elif message.text == "/playlist":
         command_playlist(message)
-    else:
-        bot.send_message(message.from_user.id, "I don't understand you. If you want to get a list of commands - type /help.")
 
 def command_github(message):
     bot.send_message(message.from_user.id, "GitHub \nhttps://github.com/n1ppers/soundcloud-bot")
