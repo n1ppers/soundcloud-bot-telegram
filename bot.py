@@ -184,8 +184,8 @@ def download_playlist(message):
     playlist = api.resolve(getURL(message.text))
     assert type(playlist) is Playlist
     for track in playlist.tracks:
-        name = f'cache/{track.artist} - {track.title}.mp3'
-        with open(name, 'wb+') as fp:
+        filename = f'cache/{track.artist} - {track.title}.mp3'
+        with open(filename, 'wb+') as fp:
             try:
                 #goddamn
                 try:
