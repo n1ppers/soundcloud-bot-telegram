@@ -26,7 +26,7 @@ from telebot import apihelper
 
 def getToken():
     with open("token.txt") as f:
-        return str(f.read())
+        return str(f.read().replace("\n", ""))
 
 if __name__ == "__main__":
     #if not os.path.exists("main.cfg"):
