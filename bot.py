@@ -3,8 +3,6 @@ import os
 import re
 import os.path
 
-import sys
-
 from sclib import SoundcloudAPI, Track, Playlist
 from telebot import types
 from telebot import apihelper
