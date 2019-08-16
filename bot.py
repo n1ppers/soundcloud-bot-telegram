@@ -3,6 +3,7 @@ import os
 import re
 import os.path
 import sys
+import time
 
 from sclib import SoundcloudAPI, Track, Playlist
 from telebot import types
@@ -41,6 +42,10 @@ if __name__ == "__main__":
     if not os.path.isdir("cache"):
         os.mkdir("cache")
         print("cache directory created.")
+
+    if not os.path.isdir("logs"):
+        os.mkdir("logs")
+        print("logs directory created.")
     
     if not os.path.isfile("token.txt"):
         f = open("token.txt", "w+")
@@ -125,10 +130,16 @@ def isLinkValid(link):
     if link.startswith("http://soundcloud.com/"):
         print("Link is valid")
         return True
+    if link.startswith("soundcloud.com/"):
+        print("Link is valid")
+        return True
     if link.startswith("http://m.soundcloud.com/"):
         print("Link is valid")
         return True
     if link.startswith("https://m.soundcloud.com/"):
+        print("Link is valid")
+        return True
+    if link.startswith("m.soundcloud.com/"):
         print("Link is valid")
         return True
     
@@ -142,11 +153,17 @@ def getURL(msg):
         if msg.startswith("http://soundcloud.com/"):
             url = msg.replace("http://soundcloud.com/", "https://soundcloud.com/")
             print("Converted link: %s" % (url))
+        elif msg.startswith("soundcloud.com/"):
+            url = msg.replace("soundcloud.com/", "https://soundcloud.com/")
+            print("Converted link: %s" % (url))
         elif msg.startswith("http://m.soundcloud.com/"):
             url = msg.replace("http://m.soundcloud.com/", "https://soundcloud.com/")
             print("Converted link: %s" % (url))
         elif msg.startswith("https://m.soundcloud.com/"):
             url = msg.replace("https://m.soundcloud.com/", "https://soundcloud.com/")
+            print("Converted link: %s" % (url))
+        elif msg.startswith("m.soundcloud.com/"):
+            url = msg.replace("m.soundcloud.com/", "https://soundcloud.com/")
             print("Converted link: %s" % (url))
         else:
             url = msg
@@ -199,4 +216,19 @@ def download_playlist(message):
             bot.send_message(message.from_user.id, f"An error has occured while downloading {track.artist} - {track.title}")
             continue
 
-bot.polling(none_stop=True, interval=0)
+def log(msg):
+    pass
+
+
+counter = int(0)
+while True:
+    if counter >= 9: 
+        print("Cannot call bot.polling after 10 attempts. \n")
+        sys.exit()
+    try:
+        bot.polling(none_stop=True, interval=0)
+        counter = 0
+    except Exception as ex:
+        counter += 1
+        print(f"An error has occured while calling bot.polling. Exception below. \n \n %s" % str(ex))
+        time.sleep(5)
