@@ -232,3 +232,5 @@ while True:
         counter += 1
         print(f"An error has occured while calling bot.polling. Exception below. \n \n %s" % str(ex))
         time.sleep(5)
+    except KeyboardInterrupt:
+        sys.exit()
